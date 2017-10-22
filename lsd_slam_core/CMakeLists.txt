@@ -9,7 +9,7 @@ add_definitions("-DENABLE_SSE")
 # Also add some useful compiler flag
 set(CMAKE_CXX_FLAGS
    "${CMAKE_CXX_FLAGS} ${SSE_FLAGS} -march=native  -std=c++0x"
-) 
+)
 #set(ROS_BUILD_TYPE Release)
 LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -41,7 +41,7 @@ find_package(Boost REQUIRED)
 find_package(OpenCV REQUIRED)
 #find_package(sophus REQUIRED)
 
-find_package(cmake_modules REQUIRED)   
+find_package(cmake_modules REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(SuiteParse REQUIRED) # Apparently needed by g2o
 find_package(X11 REQUIRED)
@@ -73,7 +73,7 @@ catkin_package(
 #  LIBRARIES rgbd_drivers_uncc
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
-  DEPENDS Boost OpenCV 
+  DEPENDS Boost OpenCV
   LIBRARIES ${PROJECT_NAME}
 )
 
@@ -108,6 +108,7 @@ set(SOURCE_FILES
 )
 
 include_directories(AFTER
+  ${catkin_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/cfg/cpp
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/thirdparty/Sophus
@@ -121,18 +122,18 @@ include_directories(AFTER
 
 
 # build shared library.
-add_library(lsdslam 
-  SHARED 
+add_library(lsdslam
+  SHARED
   ${SOURCE_FILES})
 add_dependencies(lsdslam ${PROJECT_NAME}_gencfg)
-target_link_libraries(lsdslam 
-   ${FABMAP_LIB} 
-   ${catkin_LIBRARIES} 
+target_link_libraries(lsdslam
+   ${FABMAP_LIB}
+   ${catkin_LIBRARIES}
    ${Boost_LIBRARIES}
-   ${OpenCV_LIBRARIES}  
-   ${Eigen3_LIBRARIES}  
-   ${OPENGL_LIBRARIES}  
-   ${GLUT_LIBRARIES}  
+   ${OpenCV_LIBRARIES}
+   ${Eigen3_LIBRARIES}
+   ${OPENGL_LIBRARIES}
+   ${GLUT_LIBRARIES}
    ${G2O_CORE_LIBRARY}
    ${G2O_SOLVER_DENSE}
    ${G2O_SOLVER_EIGEN}
@@ -143,23 +144,23 @@ target_link_libraries(lsdslam
    csparse cxsparse X11)
 
 # build live ros node
-add_executable(live_slam 
+add_executable(live_slam
   src/main_live_odometry.cpp)
 add_dependencies(live_slam ${PROJECT_NAME}_gencfg)
-target_link_libraries(live_slam 
-  ${catkin_LIBRARIES} 
+target_link_libraries(live_slam
+  ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
-  ${OpenCV_LIBRARIES}  
-  ${Eigen3_LIBRARIES}  
+  ${OpenCV_LIBRARIES}
+  ${Eigen3_LIBRARIES}
   lsdslam)
 
 # build image node
 add_executable(dataset_slam src/main_on_images.cpp)
 add_dependencies(dataset_slam ${PROJECT_NAME}_gencfg)
-target_link_libraries(dataset_slam 
-  ${catkin_LIBRARIES} 
+target_link_libraries(dataset_slam
+  ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
-  ${OpenCV_LIBRARIES}  
-  ${Eigen3_LIBRARIES}  
+  ${OpenCV_LIBRARIES}
+  ${Eigen3_LIBRARIES}
   lsdslam)
 
